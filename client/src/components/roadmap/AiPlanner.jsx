@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { useNavigate } from 'react-router-dom';
 import toast from 'react-hot-toast';
-import { Database, Library, Save, Sparkles, Wand2 } from 'lucide-react';
+import { Check, Database, Library, Save, Sparkles, Wand2 } from 'lucide-react';
 import { roadmapApi } from '../../services/api';
 import { getErrorMessage, getFieldErrors } from '../../lib/http';
 import { Alert, Badge, Button, ChipsField, SelectField, Switch, TextField } from '../ui';
@@ -25,29 +25,33 @@ export function AiPlanner() {
   const [errors, setErrors] = useState({});
   const [result, setResult] = useState(null);
 
+  const [saved, setSaved] = useState(null); // slug of the saved/followed roadmap
+
+  // Every generated plan is saved to the student's roadmaps right away, so it shows on the dashboard.
+  const save = useMutation({
+    mutationFn: (r) => (r.libraryRoadmapId ? roadmapApi.enroll(r.libraryRoadmapId) : roadmapApi.saveDraft(r.draftKey)),
+    onSuccess: (res, r) => {
+      setSaved(r.libraryRoadmapId ? r.roadmap.slug : res.data.roadmap.slug);
+      toast.success(r.libraryRoadmapId ? 'Added to your roadmaps and dashboard.' : 'Saved to your roadmaps and dashboard.');
+      qc.invalidateQueries({ queryKey: ['enrollments'] });
+      qc.invalidateQueries({ queryKey: ['student-dashboard'] });
+    },
+    onError: (err) => toast.error(`${getErrorMessage(err)} You can retry with the Save button.`, { duration: 7000 }),
+  });
+
   const generate = useMutation({
     mutationFn: () => roadmapApi.generate({ ...form, hoursPerWeek: Number(form.hoursPerWeek), timelineMonths: Number(form.timelineMonths) }),
     onSuccess: (res) => {
       setResult(res.data);
+      setSaved(null);
       setErrors({});
+      save.mutate(res.data);
       setTimeout(() => document.getElementById('planner-result')?.scrollIntoView({ behavior: 'smooth' }), 50);
     },
     onError: (err) => {
       setErrors(getFieldErrors(err));
       toast.error(getErrorMessage(err));
     },
-  });
-
-  const save = useMutation({
-    mutationFn: () => (result.libraryRoadmapId ? roadmapApi.enroll(result.libraryRoadmapId) : roadmapApi.saveDraft(result.draftKey)),
-    onSuccess: (res) => {
-      toast.success(res.message);
-      qc.invalidateQueries({ queryKey: ['enrollments'] });
-      qc.invalidateQueries({ queryKey: ['student-dashboard'] });
-      const slug = result.libraryRoadmapId ? result.roadmap.slug : res.data.roadmap.slug;
-      navigate(`/app/roadmap/${slug}`);
-    },
-    onError: (err) => toast.error(getErrorMessage(err)),
   });
 
   const set = (k, v) => setForm((f) => ({ ...f, [k]: v }));
@@ -110,9 +114,13 @@ export function AiPlanner() {
                 <p className="muted small mt-1 mb-0">{result.roadmap.summary}</p>
                 {result.roadmap.duration && <p className="xs subtle mb-0">Suggested duration: {result.roadmap.duration}</p>}
               </div>
-              <Button variant="primary" icon={Save} loading={save.isPending} onClick={() => save.mutate()}>
-                {result.libraryRoadmapId ? 'Follow this roadmap' : 'Save to my roadmaps'}
-              </Button>
+              {saved ? (
+                <Button variant="primary" icon={Check} onClick={() => navigate(`/app/roadmap/${saved}`)}>Saved · Open roadmap</Button>
+              ) : (
+                <Button variant="primary" icon={Save} loading={save.isPending} onClick={() => save.mutate(result)}>
+                  {save.isPending ? 'Saving…' : 'Save to my roadmaps'}
+                </Button>
+              )}
             </div>
           </div>
           <RoadmapMeta roadmap={result.roadmap} />
