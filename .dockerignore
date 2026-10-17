@@ -1,0 +1,12 @@
+**/node_modules
+**/.env
+**/.env.*
+!**/.env.example
+client/dist
+server/storage
+server/tests
+.claude
+docs
+*.md
+*.ps1
+.git

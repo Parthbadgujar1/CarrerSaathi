@@ -1,0 +1,85 @@
+/* ==========================================================================
+   Print stylesheet — clean output for resumes, roadmaps and policy pages.
+   ========================================================================== */
+@media print {
+  @page {
+    margin: 14mm 12mm;
+  }
+  :root {
+    --bg: #fff;
+    --surface: #fff;
+    --text: #000;
+    --text-muted: #333;
+    --border: #ccc;
+  }
+  html,
+  body {
+    background: #fff !important;
+    color: #000 !important;
+    font-size: 12pt;
+  }
+  .site-header,
+  .site-footer,
+  .sidebar,
+  .sidebar-backdrop,
+  .topbar,
+  .floating-stack,
+  .cookie-banner,
+  .scroll-progress,
+  .route-progress,
+  .skip-link,
+  .banner,
+  .tabs,
+  .ai-panel,
+  .offline-banner,
+  .no-print,
+  .page-title,
+  .btn,
+  .icon-btn,
+  [data-sonner-toaster],
+  .toast {
+    display: none !important;
+  }
+  .app-shell {
+    display: block;
+  }
+  .page {
+    padding: 0;
+    max-width: none;
+  }
+  .card,
+  .step-item {
+    border: 1px solid #ccc !important;
+    box-shadow: none !important;
+    break-inside: avoid;
+  }
+  a {
+    color: #000;
+    text-decoration: underline;
+  }
+  /* Show link targets on policy pages, but not in the resume (keeps it compact). */
+  .prose a[href^='http']::after {
+    content: ' (' attr(href) ')';
+    font-size: 0.85em;
+    color: #555;
+  }
+  .print-only {
+    display: block !important;
+  }
+  .resume-print-root .resume-editor {
+    display: none !important;
+  }
+  .resume-print-root .resume-paper {
+    border: 0;
+    padding: 0;
+    font-size: 11pt;
+  }
+  h1,
+  h2,
+  h3 {
+    break-after: avoid;
+  }
+}
+.print-only {
+  display: none;
+}

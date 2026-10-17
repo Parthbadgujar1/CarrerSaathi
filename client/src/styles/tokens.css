@@ -1,0 +1,186 @@
+/* ==========================================================================
+   Design tokens — light & dark themes.
+   Theme: teal & ink, modelled on uorapublications.com — airy near-white
+   surfaces with soft mint/cyan glows, deep-ink text, teal pill buttons and
+   deep-ink bands (#061727) for calls to action and the footer.
+   Colour pairs meet WCAG AA contrast (4.5:1 for body text).
+   ========================================================================== */
+:root {
+  color-scheme: light;
+  --font-sans: 'Inter Variable', 'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, 'Noto Sans', sans-serif;
+  --font-mono: ui-monospace, 'Cascadia Code', 'SFMono-Regular', Consolas, monospace;
+
+  /* Brand constants (identical in both themes) */
+  --brand-teal: #0e7c77; /* 5.0:1 with white text */
+  --brand-teal-dark: #0d6360;
+  --brand-cyan: #00a6b6;
+  --brand-glow: #71d7e8; /* highlight on ink backgrounds */
+  --brand-mint: #ade9e2;
+  --brand-ink: #0c2340;
+  --brand-deep: #061727;
+  --on-brand: #ffffff;
+  --brand-gradient: linear-gradient(90deg, #0e7c77 0%, #00a6b6 100%);
+  /* Deep-ink band used for the CTA, "bridging the gap" band and footer */
+  --band-gradient: radial-gradient(ellipse at 15% 0%, rgba(14, 124, 119, 0.35), transparent 55%), radial-gradient(ellipse at 90% 100%, rgba(0, 166, 182, 0.18), transparent 50%), #061727;
+  /* Airy hero: mint & cyan glows on near-white */
+  --hero-bg: radial-gradient(ellipse at 55% 0%, rgba(173, 233, 226, 0.55), transparent 55%), radial-gradient(ellipse at 0% 60%, rgba(192, 214, 234, 0.45), transparent 50%), radial-gradient(ellipse at 100% 80%, rgba(213, 245, 240, 0.6), transparent 45%), #fbfcfd;
+  --grid-line: rgba(12, 35, 64, 0.06);
+
+  --bg: #fbfcfd;
+  --bg-subtle: #f7f9fa;
+  --surface: #ffffff;
+  --surface-2: #eef2f5;
+  --surface-3: #e4eaf0;
+  --border: #e4eaf0;
+  --border-strong: #c5d0da;
+  --text: #1a222d;
+  --text-muted: #526375;
+  --text-subtle: #607486;
+
+  --primary: #0e7c77;
+  --primary-hover: #0d6360;
+  --primary-soft: #e6f6f3;
+  --primary-soft-text: #0d6360;
+  --on-primary: #ffffff;
+  --heading: #061727;
+  --kicker: #0d6360;
+  --highlight: #0d6360; /* accent word in headings */
+
+  --accent: #6d28d9;
+  --accent-soft: #f1eafd;
+
+  --success: #15803d;
+  --success-soft: #e7f6ec;
+  --warning: #a16207;
+  --warning-soft: #fdf5e1;
+  --danger: #b91c1c;
+  --danger-soft: #fdecec;
+  --info: #1d4ed8;
+  --info-soft: #e8effd;
+
+  /* Skill NexGen family platform accents (text-safe on white) */
+  --pf-skillnexgen: #c2410c;
+  --pf-skillnexgen-soft: #fff1e6;
+  --pf-kaushalsaathi: #1d4ed8;
+  --pf-kaushalsaathi-soft: #e8effd;
+  --pf-internsaathi: #4f46e5;
+  --pf-internsaathi-soft: #eef0ff;
+  --pf-naukrisaathi: #15803d;
+  --pf-naukrisaathi-soft: #e7f6ec;
+
+  --chart-1: #0d9488; /* validated: lightness band, chroma floor, contrast */
+  --chart-grid: #e7ecf1;
+
+  --shadow-sm: 0 1px 2px rgba(6, 23, 39, 0.05);
+  --shadow: 0 1px 3px rgba(6, 23, 39, 0.07), 0 6px 18px rgba(6, 23, 39, 0.05);
+  --shadow-lg: 0 16px 40px rgba(6, 23, 39, 0.12);
+  --focus-ring: 0 0 0 3px rgba(14, 124, 119, 0.35);
+
+  --radius-sm: 8px;
+  --radius: 12px;
+  --radius-lg: 18px;
+  --radius-full: 999px;
+
+  --header-h: 64px;
+  --sidebar-w: 248px;
+  --container: 1180px;
+  --ease: cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme='light']) {
+    color-scheme: dark;
+    --hero-bg: radial-gradient(ellipse at 55% 0%, rgba(14, 124, 119, 0.32), transparent 55%), radial-gradient(ellipse at 0% 60%, rgba(0, 166, 182, 0.12), transparent 50%), #061727;
+    --grid-line: rgba(255, 255, 255, 0.05);
+    --bg: #061727;
+    --bg-subtle: #081d30;
+    --surface: #0b2236;
+    --surface-2: #102b42;
+    --surface-3: #16354f;
+    --border: #1b3a55;
+    --border-strong: #285070;
+    --text: #e6eef5;
+    --text-muted: #a9bccc;
+    --text-subtle: #8aa0b3;
+    --primary: #5fd4c8;
+    --primary-hover: #8ae3da;
+    --primary-soft: rgba(95, 212, 200, 0.12);
+    --primary-soft-text: #8ae3da;
+    --on-primary: #061727;
+    --heading: #f1f6fa;
+    --kicker: #71d7e8;
+    --highlight: #71d7e8;
+    --accent: #a78bfa;
+    --accent-soft: rgba(167, 139, 250, 0.14);
+    --success: #4ade80;
+    --success-soft: rgba(74, 222, 128, 0.12);
+    --warning: #fbbf24;
+    --warning-soft: rgba(251, 191, 36, 0.12);
+    --danger: #f87171;
+    --danger-soft: rgba(248, 113, 113, 0.12);
+    --info: #93b4fd;
+    --info-soft: rgba(147, 180, 253, 0.12);
+    --pf-skillnexgen: #fb923c;
+    --pf-skillnexgen-soft: rgba(251, 146, 60, 0.14);
+    --pf-kaushalsaathi: #93b4fd;
+    --pf-kaushalsaathi-soft: rgba(147, 180, 253, 0.14);
+    --pf-internsaathi: #a5b4fc;
+    --pf-internsaathi-soft: rgba(165, 180, 252, 0.14);
+    --pf-naukrisaathi: #4ade80;
+    --pf-naukrisaathi-soft: rgba(74, 222, 128, 0.12);
+    --chart-1: #12a897;
+    --chart-grid: #17324a;
+    --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.4);
+    --shadow: 0 1px 3px rgba(0, 0, 0, 0.5), 0 4px 12px rgba(0, 0, 0, 0.3);
+    --shadow-lg: 0 12px 32px rgba(0, 0, 0, 0.55);
+    --focus-ring: 0 0 0 3px rgba(95, 212, 200, 0.4);
+  }
+}
+
+:root[data-theme='dark'] {
+  color-scheme: dark;
+  --hero-bg: radial-gradient(ellipse at 55% 0%, rgba(14, 124, 119, 0.32), transparent 55%), radial-gradient(ellipse at 0% 60%, rgba(0, 166, 182, 0.12), transparent 50%), #061727;
+  --grid-line: rgba(255, 255, 255, 0.05);
+  --bg: #061727;
+  --bg-subtle: #081d30;
+  --surface: #0b2236;
+  --surface-2: #102b42;
+  --surface-3: #16354f;
+  --border: #1b3a55;
+  --border-strong: #285070;
+  --text: #e6eef5;
+  --text-muted: #a9bccc;
+  --text-subtle: #8aa0b3;
+  --primary: #5fd4c8;
+  --primary-hover: #8ae3da;
+  --primary-soft: rgba(95, 212, 200, 0.12);
+  --primary-soft-text: #8ae3da;
+  --on-primary: #061727;
+  --heading: #f1f6fa;
+  --kicker: #71d7e8;
+  --highlight: #71d7e8;
+  --accent: #a78bfa;
+  --accent-soft: rgba(167, 139, 250, 0.14);
+  --success: #4ade80;
+  --success-soft: rgba(74, 222, 128, 0.12);
+  --warning: #fbbf24;
+  --warning-soft: rgba(251, 191, 36, 0.12);
+  --danger: #f87171;
+  --danger-soft: rgba(248, 113, 113, 0.12);
+  --info: #93b4fd;
+  --info-soft: rgba(147, 180, 253, 0.12);
+  --pf-skillnexgen: #fb923c;
+  --pf-skillnexgen-soft: rgba(251, 146, 60, 0.14);
+  --pf-kaushalsaathi: #93b4fd;
+  --pf-kaushalsaathi-soft: rgba(147, 180, 253, 0.14);
+  --pf-internsaathi: #a5b4fc;
+  --pf-internsaathi-soft: rgba(165, 180, 252, 0.14);
+  --pf-naukrisaathi: #4ade80;
+  --pf-naukrisaathi-soft: rgba(74, 222, 128, 0.12);
+  --chart-1: #12a897;
+  --chart-grid: #17324a;
+  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.4);
+  --shadow: 0 1px 3px rgba(0, 0, 0, 0.5), 0 4px 12px rgba(0, 0, 0, 0.3);
+  --shadow-lg: 0 12px 32px rgba(0, 0, 0, 0.55);
+  --focus-ring: 0 0 0 3px rgba(95, 212, 200, 0.4);
+}
