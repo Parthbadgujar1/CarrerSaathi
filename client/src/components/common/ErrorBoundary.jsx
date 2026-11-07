@@ -44,7 +44,11 @@ export class ErrorBoundary extends Component {
         <div>
           <div className="error-code">Oops</div>
           <h1 style={{ fontSize: '1.5rem' }}>Something went wrong on this page</h1>
-          <p className="muted">The rest of CareerSaathi is still working. Try reloading, or head back home.</p>
+          <p className="muted">
+            {/dynamically imported module|Loading chunk|Importing a module script failed/i.test(String(this.state.error?.message))
+              ? 'CareerSaathi was just updated. Reload the page to get the latest version.'
+              : 'The rest of CareerSaathi is still working. Try reloading, or head back home.'}
+          </p>
           <div className="row" style={{ justifyContent: 'center' }}>
             <button type="button" className="btn btn-primary" onClick={() => window.location.reload()}>
               <RefreshCw aria-hidden="true" /> Reload page

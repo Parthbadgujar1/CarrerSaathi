@@ -156,7 +156,7 @@ export function ProgressTracker({ scope = 'student' }) {
           <h2 id={`prog-${scope}`}>{title}</h2>
           <p className="xs muted mb-0">{current.long}{scope === 'admin' ? ' · all students' : ''}</p>
         </div>
-        <div className="row" style={{ '--gap': '8px' }}>
+        <div className="row prog-controls" style={{ '--gap': '8px' }}>
           <div className="segmented" role="group" aria-label="Period">
             {PERIODS.map((p) => (
               <button key={p.value} type="button" aria-pressed={period === p.value} onClick={() => setPeriod(p.value)}>

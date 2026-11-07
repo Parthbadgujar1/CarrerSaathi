@@ -7,7 +7,24 @@ import { RouteProgress } from '../components/common/SiteChrome';
 import { PageLoader } from '../components/ui';
 
 // Code-split every page so the first load stays small.
-const page = (loader, name) => lazy(() => loader().then((m) => ({ default: m[name] })));
+// After a redeploy the old page's JS chunks no longer exist. Reload once to pick up the new build instead of showing an error.
+const page = (loader, name) =>
+  lazy(() =>
+    loader()
+      .then((m) => ({ default: m[name] }))
+      .catch((err) => {
+        try {
+          if (Date.now() - Number(sessionStorage.getItem('cs-chunk-reload') || 0) > 60000) {
+            sessionStorage.setItem('cs-chunk-reload', String(Date.now()));
+            window.location.reload();
+            return new Promise(() => {});
+          }
+        } catch {
+          /* storage unavailable: fall through to the error boundary */
+        }
+        throw err;
+      }),
+  );
 
 const Home = page(() => import('../pages/public/Home'), 'Home');
 const RoadmapLibrary = page(() => import('../pages/public/RoadmapLibrary'), 'RoadmapLibrary');

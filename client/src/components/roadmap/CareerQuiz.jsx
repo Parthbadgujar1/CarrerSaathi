@@ -4,7 +4,7 @@ import toast from 'react-hot-toast';
 import { ArrowLeft, ArrowRight, Compass, RefreshCw, RotateCcw, Sparkles } from 'lucide-react';
 import { roadmapApi } from '../../services/api';
 import { getErrorMessage } from '../../lib/http';
-import { Alert, Badge, Button, ErrorState, PageLoader, ProgressBar } from '../ui';
+import { Alert, Badge, Button, CardSkeleton, ErrorState, ProgressBar } from '../ui';
 import { RoadmapCard } from './RoadmapParts';
 
 /**
@@ -44,9 +44,9 @@ export function CareerQuiz({ enrolledIds }) {
 
   if (isLoading || (isFetching && !data)) {
     return (
-      <div className="card" style={{ maxWidth: 720 }}>
-        <PageLoader />
-        <p className="small muted center mb-0">Saathi is writing a fresh set of questions for you…</p>
+      <div className="stack" style={{ maxWidth: 720 }}>
+        <CardSkeleton lines={5} />
+        <p className="small muted center mb-0" role="status">Saathi is writing a fresh set of questions for you…</p>
       </div>
     );
   }

@@ -1021,3 +1021,42 @@
   color: var(--text);
 }
 .prog-cal-cell b { font-size: 0.7rem; }
+
+
+/* ---------- Test results ---------- */
+.result-card { display: flex; align-items: center; gap: 24px; flex-wrap: wrap; }
+.result-marks { display: flex; align-items: baseline; gap: 8px; flex-wrap: wrap; }
+.result-score { font-size: 2.2rem; font-weight: 800; line-height: 1; color: var(--primary); }
+.result-total { font-size: 1rem; font-weight: 600; color: var(--text-muted); }
+.score-chip { display: flex; align-items: center; gap: 8px; flex-shrink: 0; }
+.score-chip strong { font-size: 0.95rem; }
+
+/* ---------- Mobile responsiveness & overflow guards ---------- */
+.app-main, .page, .card, .dash-col { min-width: 0; }
+.card-header { flex-wrap: wrap; }
+.segmented { max-width: 100%; overflow-x: auto; scrollbar-width: none; }
+.segmented::-webkit-scrollbar { display: none; }
+.segmented button { white-space: nowrap; }
+.prog-controls { max-width: 100%; }
+.card img, .card svg { max-width: 100%; }
+p, h1, h2, h3, h4, li, td, th, .bubble { overflow-wrap: anywhere; }
+.table-wrap { position: relative; -webkit-overflow-scrolling: touch; }
+.scroll-hint { display: none; }
+
+@media (max-width: 900px) {
+  .test-layout { grid-template-columns: minmax(0, 1fr); }
+  .test-layout > aside { order: -1; }
+}
+@media (max-width: 640px) {
+  .result-card { flex-direction: column; align-items: stretch; text-align: left; }
+  .result-card .ring { align-self: center; }
+  .card-header { align-items: flex-start; }
+  .prog-totals { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .prog-bars { gap: 2px; height: 140px; }
+  .prog-ring-grid { min-width: 0; width: 100%; }
+  .list-row { flex-wrap: wrap; }
+  .row-between { align-items: flex-start; }
+  .btn { max-width: 100%; }
+  .scroll-hint { display: block; font-size: 0.72rem; color: var(--text-muted); text-align: right; margin: 0 0 4px; }
+  .table-wrap { box-shadow: inset -14px 0 10px -12px rgba(0, 0, 0, 0.25); }
+}

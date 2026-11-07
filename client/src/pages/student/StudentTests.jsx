@@ -163,7 +163,10 @@ function Practice() {
                   <Link to={`/app/tests/practice/${p._id}`} className="bold">{p.title}</Link>
                   <div className="xs muted">{p.kind === 'confidence' ? 'Self-rating' : 'Quiz'} · {timeAgo(p.submittedAt)}</div>
                 </div>
-                <Badge tone={p.percent >= 70 ? 'success' : p.percent >= 40 ? 'primary' : 'warning'}>{p.percent}%</Badge>
+                <div className="score-chip">
+                  <strong>{p.score ?? '–'}/{p.total ?? '–'}</strong>
+                  <Badge tone={p.percent >= 70 ? 'success' : p.percent >= 40 ? 'primary' : 'warning'}>{p.percent}%</Badge>
+                </div>
               </li>
             ))}
           </ul>
@@ -174,21 +177,29 @@ function Practice() {
 }
 
 function Results() {
-  const { data, isLoading, error, refetch } = useQuery({ queryKey: ['test-results-me'], queryFn: testApi.resultsMe });
-  if (isLoading) return <CardSkeleton count={2} />;
-  if (error) return <ErrorState error={error} onRetry={refetch} />;
-  const rows = data.data;
-  if (!rows.length) return <EmptyState icon={Trophy} title="No results yet">Finish a test and your score history will show up here.</EmptyState>;
+  const tests = useQuery({ queryKey: ['test-results-me'], queryFn: testApi.resultsMe });
+  const practice = useQuery({ queryKey: ['practice-history'], queryFn: practiceApi.history });
+  if (tests.isLoading || practice.isLoading) return <CardSkeleton count={2} />;
+  if (tests.error) return <ErrorState error={tests.error} onRetry={tests.refetch} />;
+  const rows = [
+    ...(tests.data?.data || []).map((r) => ({ ...r, type: 'test', to: `/app/tests/attempt/${r._id}` })),
+    ...(practice.data?.data?.items || []).map((p) => ({ ...p, type: 'practice', to: `/app/tests/practice/${p._id}` })),
+  ].sort((a, b) => new Date(b.submittedAt) - new Date(a.submittedAt));
+  if (!rows.length) return <EmptyState icon={Trophy} title="No results yet">Finish a test or a practice quiz and your score history will show up here.</EmptyState>;
   return (
     <div className="card">
       <ul className="list-plain">
         {rows.map((r) => (
-          <li key={r._id} className="list-row">
-            <div className="flex-1">
-              <Link to={`/app/tests/attempt/${r._id}`} className="bold">{r.title}</Link>
-              <div className="xs muted">{fmtDateTime(r.submittedAt)} · {r.score}/{r.total} marks</div>
+          <li key={`${r.type}-${r._id}`} className="list-row">
+            <div className="flex-1" style={{ minWidth: 0 }}>
+              <Link to={r.to} className="bold">{r.title}</Link>
+              <div className="xs muted">
+                {r.type === 'practice' ? 'Practice' : 'Test'} · {fmtDateTime(r.submittedAt)} · {r.score ?? '–'}/{r.total ?? '–'} {r.type === 'test' ? 'marks' : r.kind === 'confidence' ? 'points' : 'correct'}
+              </div>
             </div>
-            <Badge tone={r.passed ? 'success' : 'warning'}>{r.percent}% · {r.passed ? 'Passed' : 'Not passed'}</Badge>
+            <Badge tone={r.type === 'test' ? (r.passed ? 'success' : 'warning') : r.percent >= 70 ? 'success' : r.percent >= 40 ? 'primary' : 'warning'}>
+              {r.percent}%{r.type === 'test' ? ` · ${r.passed ? 'Passed' : 'Not passed'}` : ''}
+            </Badge>
           </li>
         ))}
       </ul>

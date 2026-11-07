@@ -352,11 +352,11 @@ export async function counsellorChat({ message, history = [] }, user) {
     } else {
       logCall(user, 'chat', 'rules');
     }
-    return {
-      source: 'rules',
-      reply: ruleBasedAnswer(message),
-      notice: quota.remaining <= 0 && quota.enabled ? "You've reached today's AI limit — showing built-in guidance." : undefined,
-    };
+    let notice;
+    if (!quota.enabled) notice = 'AI answers are switched off by the admin — showing built-in guidance.';
+    else if (!configuredProviders().length) notice = 'AI is not set up on this server yet (no API key) — showing built-in guidance.';
+    else if (quota.remaining <= 0) notice = "You've reached today's AI limit — showing built-in guidance.";
+    return { source: 'rules', reply: ruleBasedAnswer(message), notice };
   } catch (err) {
     logger.error('Ask Saathi failed unexpectedly', { message: err.message });
     return { source: 'rules', reply: ruleBasedAnswer(message) };

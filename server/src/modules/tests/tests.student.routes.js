@@ -275,7 +275,7 @@ practiceRouter.get('/history', async (req, res) => {
   res.json({
     success: true,
     data: {
-      items: items.slice(0, 20).map((p) => ({ _id: p._id, title: p.title, kind: p.kind, percent: p.percent, submittedAt: p.submittedAt })),
+      items: items.slice(0, 20).map((p) => ({ _id: p._id, title: p.title, kind: p.kind, score: p.score, total: p.total, percent: p.percent, submittedAt: p.submittedAt })),
       roadmaps: [...byRoadmap.values()].map((r) => ({ ...r, trend: r.trend.slice(-8), average: Math.round(r.trend.reduce((a, b) => a + b, 0) / r.trend.length), last: r.trend.at(-1) })),
     },
   });

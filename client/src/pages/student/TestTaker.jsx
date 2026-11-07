@@ -36,16 +36,36 @@ function Choices({ options, value, onChange, correct, disabled }) {
 /** Result + answer review, shared by tests and practice quizzes. */
 export function ResultView({ result, back, backLabel, extra }) {
   const passed = result.passed;
+  const isConf = result.kind === 'confidence';
+  const review = Array.isArray(result.review) ? result.review : [];
   const timeTaken = result.timeTakenSec ? `${Math.floor(result.timeTakenSec / 60)}m ${result.timeTakenSec % 60}s` : null;
+  const correctCount = review.filter((q) => q.isCorrect).length;
+  const skippedCount = review.filter((q) => (q.chosen ?? null) === null).length;
+  const wrongCount = Math.max(0, review.length - correctCount - skippedCount);
+  const percent = Number(result.percent) || 0;
+  const verdict = percent >= 80 ? 'Excellent work!' : percent >= 60 ? 'Good job — keep going.' : percent >= 40 ? 'Getting there — revise the weak topics below.' : 'Needs more practice — revisit the topics below and try again.';
+  const unit = result.test ? 'marks' : isConf ? 'rating points' : 'correct answers';
   return (
     <div className="stack">
-      <div className="card row" style={{ gap: 24 }}>
-        <ProgressRing value={result.percent} label="Score" sublabel={`${result.percent}%`} />
-        <div className="flex-1 stack" style={{ '--gap': '6px' }}>
+      <div className="card result-card">
+        <ProgressRing value={percent} label="Score" sublabel={`${percent}%`} />
+        <div className="flex-1 stack" style={{ '--gap': '8px', minWidth: 0 }}>
           <h2 className="mb-0">{result.test?.title || result.title}</h2>
-          <div className="row">
+          <div className="result-marks" aria-label="Marks obtained">
+            <span className="result-score">{result.score ?? 0}</span>
+            <span className="result-total">/ {result.total ?? 0} {unit}</span>
+          </div>
+          <p className="small muted mb-0">{verdict}</p>
+          <div className="row" style={{ '--gap': '8px' }}>
             {passed !== undefined && <Badge tone={passed ? 'success' : 'warning'}>{passed ? 'Passed' : 'Not passed'}</Badge>}
-            {result.kind === 'confidence' ? <Badge>Self-rating</Badge> : <Badge tone="primary">{result.score} / {result.total} {result.test ? 'marks' : 'correct'}</Badge>}
+            {isConf && <Badge>Self-rating</Badge>}
+            {!isConf && review.length > 0 && (
+              <>
+                <Badge tone="success" icon={CheckCircle2}>{correctCount} correct</Badge>
+                <Badge tone="danger" icon={XCircle}>{wrongCount} incorrect</Badge>
+                {skippedCount > 0 && <Badge tone="warning">{skippedCount} skipped</Badge>}
+              </>
+            )}
             {timeTaken && <span className="small muted">Time taken {timeTaken}</span>}
             {result.autoSubmitted && <Badge tone="warning">Auto-submitted when time ended</Badge>}
           </div>
@@ -60,7 +80,7 @@ export function ResultView({ result, back, backLabel, extra }) {
         </Alert>
       )}
 
-      {result.review?.map((q, i) => (
+      {review.map((q, i) => (
         <div key={q._id || i} className="card stack" style={{ '--gap': '10px' }}>
           <div className="row-between">
             <strong>{i + 1}. {q.text}</strong>
@@ -72,7 +92,7 @@ export function ResultView({ result, back, backLabel, extra }) {
               <Badge tone="danger" icon={XCircle}>{(q.chosen ?? null) === null ? 'Skipped' : 'Incorrect'}</Badge>
             )}
           </div>
-          {result.kind !== 'confidence' && <Choices options={q.options} value={q.chosen ?? undefined} correct={q.correct} disabled />}
+          {result.kind !== 'confidence' && <Choices options={q.options || []} value={q.chosen ?? undefined} correct={q.correct ?? -1} disabled />}
           {q.explanation && <p className="small muted mb-0"><strong>Why:</strong> {q.explanation}</p>}
         </div>
       ))}
