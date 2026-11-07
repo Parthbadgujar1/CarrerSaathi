@@ -12,6 +12,8 @@ import { OpportunityCard } from '../../components/opportunities/OpportunityCard'
 import { roadmapIcon } from '../../components/roadmap/RoadmapParts';
 import { ErrorBoundary } from '../../components/common/ErrorBoundary';
 import { MOODS } from './Wellness';
+import { ProgressTracker } from '../../components/progress/ProgressTracker';
+import { TipsCard } from '../../components/common/TipsCard';
 
 const greeting = () => {
   const h = Number(new Date().toLocaleString('en-IN', { hour: 'numeric', hour12: false, timeZone: 'Asia/Kolkata' }));
@@ -82,6 +84,8 @@ export function StudentHome() {
       <div className="dash-layout">
         {/* ---------------- Main column ---------------- */}
         <div className="dash-col">
+          <ErrorBoundary variant="section"><ProgressTracker scope="student" /></ErrorBoundary>
+          <TipsCard />
           <section className="card" aria-labelledby="next-h">
             <div className="card-header">
               <h2 id="next-h">Next steps</h2>

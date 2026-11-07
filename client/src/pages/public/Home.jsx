@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { Link } from 'react-router-dom';
 import {
-  ArrowRight, BadgeCheck, Briefcase, CalendarDays, CheckCircle2, Compass, GraduationCap, HeartPulse, MessagesSquare, Sparkles, Users, Building2,
+  ArrowRight, BadgeCheck, Briefcase, CalendarDays, CheckCircle2, Compass, GraduationCap, HeartPulse, Layers, MessagesSquare, Route, Sparkles, Users, Building2,
 } from 'lucide-react';
 import { publicApi, roadmapApi } from '../../services/api';
 import { useDocumentTitle } from '../../hooks';
@@ -11,6 +11,7 @@ import { RoadmapCard } from '../../components/roadmap/RoadmapParts';
 import { SITE } from '../../config/site';
 import { PlatformShowcase } from '../../components/common/PlatformShowcase';
 import { FAQS, FaqList } from './Faq';
+import { TipsCard } from '../../components/common/TipsCard';
 
 /** "Why choose" cards — numbered, as on kaushalsaathi.com. */
 const WHY = [
@@ -18,8 +19,11 @@ const WHY = [
   { icon: BadgeCheck, title: 'Industry readiness score', text: 'A clear 0–100 score from your profile, career kit (resume, LinkedIn, portfolio), roadmap progress and consistency — with the next best step.' },
   { icon: Briefcase, title: 'Opportunities in one place', text: 'Internships, jobs, hackathons and scholarships, plus direct paths into InternSaathi, NaukriSaathi, Unstop and Indeed — with an application tracker.' },
   { icon: MessagesSquare, title: 'Mentors & communities', text: 'Talk 1:1 with industry mentors and learn alongside peers in communities built around your career interests.' },
-  { icon: CalendarDays, title: 'Live sessions', text: 'Seminars, workshops and mock interviews by mentors and the Skill NexGen team — join right from your dashboard.' },
-  { icon: HeartPulse, title: 'Wellbeing built in', text: 'Daily check-ins, breathing exercise, focus timer and gentle support — because a healthy mind is part of a great career.' },
+  { icon: CalendarDays, title: 'Live sessions', text: 'Seminars, workshops and mock interviews by mentors and the Sunsys Techsol team — join right from your dashboard.' },
+  { icon: HeartPulse, title: 'Wellbeing built in', text: 'Daily check-ins, breathing exercise, focus timer, yoga videos and gentle support — because a healthy mind is part of a great career.' },
+  { icon: Route, title: 'Day 1 to your last journey', text: 'Most students only learn what “job-ready” means when placements are near. We walk with you from your first day in college to your first job — and beyond.' },
+  { icon: Layers, title: 'Bridging academia and industry', text: 'Colleges teach the foundations; employers want proof of skills. We turn what you study into the skills, projects and habits industry looks for.' },
+  { icon: Sparkles, title: 'A unique initiative by Sunsys Techsol', text: 'Built by Sunsys Techsol Pvt. Ltd. to help every student, from every degree and every college — free, with no hidden fees.' },
 ];
 
 /** "Simple. Smart. Seamless." steps with an audience switcher, as on naukrisaathi.com. */
@@ -38,7 +42,7 @@ const STEPS = {
     label: 'For Mentors',
     icon: Users,
     steps: [
-      ['Apply to mentor', 'Share your experience; the Skill NexGen team reviews every application.'],
+      ['Apply to mentor', 'Share your experience; the Sunsys Techsol team reviews every application.'],
       ['Accept mentees', 'Students request you by expertise — you decide whom to guide.'],
       ['Track & set goals', 'See each mentee’s roadmap, career kit and readiness; add goals and feedback.'],
       ['Host & share', 'Run sessions or mock interviews and post opportunities to matching students.'],
@@ -62,7 +66,7 @@ const BRIDGE = [
   'Skill-gap analysis against each career path',
   'Resume builder and LinkedIn / GitHub checklist',
   'Mock interviews and guidance from industry mentors',
-  'Direct routes to internships and jobs across the Skill NexGen network',
+  'Direct routes to internships and jobs across the Sunsys Techsol network',
 ];
 
 export function Home() {
@@ -88,14 +92,15 @@ export function Home() {
               <span className="chip">
                 <Sparkles aria-hidden="true" /> Free
               </span>
-              CareerSaathi · by {SITE.company}
+              CareerSaathi · a unique initiative by {SITE.company}
             </span>
             <h1 id="hero-title">
               Plan Your Career. <span className="hl">Become Industry&#8209;Ready.</span>
             </h1>
             <p className="lead">
-              Personalised roadmaps, industry mentors, real opportunities and wellbeing support — free for every graduation student, from B.Tech and
-              B.Com to BBA, BA, M.Tech and MBA.
+              From Day 1 to your last journey — most students don’t know what being job-ready means until it’s almost too late. We help
+              bridge the academia–industry gap with personalised roadmaps, industry mentors, real opportunities and wellbeing support, free
+              for every graduation student, from B.Tech and B.Com to BBA, BA, M.Tech and MBA.
             </p>
             <div className="row" style={{ '--gap': '12px' }}>
               <Button variant="brand" size="lg" to="/register" iconRight={ArrowRight}>
@@ -153,7 +158,7 @@ export function Home() {
           <div className="section-head">
             <span className="section-kicker">Why CareerSaathi</span>
             <h2 id="why-title">Why Choose CareerSaathi?</h2>
-            <p>More than a job board or a course list — a structured path from where you are today to your first role, with support at every step.</p>
+            <p>More than a job board or a course list — a unique initiative by {SITE.company} that guides every student from Day 1 to a first role, with support at every step.</p>
           </div>
           <div className="grid-3">
             {WHY.map((f, i) => (
@@ -288,13 +293,20 @@ export function Home() {
         </div>
       </section>
 
+      {/* ---------------- Tips ---------------- */}
+      <section className="section section-alt" aria-label="Tips">
+        <div className="container" style={{ maxWidth: 820 }}>
+          <TipsCard />
+        </div>
+      </section>
+
       {/* ---------------- FAQ preview ---------------- */}
       <section className="section" aria-labelledby="faq-title">
         <div className="container grid-2" style={{ alignItems: 'start', gap: 40 }}>
           <div>
             <span className="section-kicker">FAQs</span>
             <h2 id="faq-title">Questions students ask us</h2>
-            <p className="muted">Quick answers about cost, AI, mentors and your data.</p>
+            <p className="muted">Nine quick answers about our portal — cost, roadmaps, mentors, opportunities and your data.</p>
             <div className="card mt-2" style={{ background: 'var(--bg-subtle)' }}>
               <h3 style={{ marginBottom: 4 }}>Still have questions?</h3>
               <p className="small muted">Our team is here to help.</p>
@@ -304,7 +316,7 @@ export function Home() {
               </div>
             </div>
           </div>
-          <FaqList items={FAQS.slice(0, 5)} />
+          <FaqList items={FAQS} />
         </div>
       </section>
 

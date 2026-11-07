@@ -14,7 +14,7 @@ export function AuthLayout({ children, wide }) {
   return (
     <div className="auth-page">
       <aside className="auth-aside on-brand" aria-hidden="true">
-        <Brand sub="by Skill NexGen" />
+        <Brand sub="by Sunsys Techsol" />
         <div>
           <h2 style={{ fontSize: '1.6rem', maxWidth: 420 }}>Your companion from classroom to career.</h2>
           <ul className="list-plain stack mt-2" style={{ '--gap': '14px' }}>

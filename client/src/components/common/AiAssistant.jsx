@@ -26,7 +26,13 @@ export function AiAssistant({ onClose }) {
     const message = text.trim();
     if (!message || busy) return;
     setInput('');
-    const history = messages.slice(1).slice(-6).map(({ role, content }) => ({ role, content }));
+    // Only real exchanges go back as context (never the greeting or an error bubble), and always starting with the student's turn.
+    const history = messages
+      .slice(1)
+      .filter((m) => m.source !== 'error')
+      .slice(-6)
+      .map(({ role, content }) => ({ role, content }));
+    while (history.length && history[0].role !== 'user') history.shift();
     setMessages((m) => [...m, { role: 'user', content: message }]);
     setBusy(true);
     try {

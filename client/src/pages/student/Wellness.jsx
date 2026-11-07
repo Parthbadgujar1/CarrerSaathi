@@ -8,6 +8,7 @@ import { getErrorMessage } from '../../lib/http';
 import { PageTitle } from '../../components/common/PageTitle';
 import { Alert, Button, CardSkeleton, ErrorState, Switch, TextAreaField, TextField, StatCard } from '../../components/ui';
 import { ChartCard, ColumnChart, LineChart } from '../../components/charts/Charts';
+import { YogaLinks } from '../../components/common/YogaLinks';
 
 export const MOODS = [
   { value: 1, emoji: '😞', label: 'Low' },
@@ -269,6 +270,7 @@ export function Wellness() {
         <BreathingExercise />
         <FocusTimer />
       </div>
+      <YogaLinks />
       <section className="card mt-2" aria-labelledby="support-h">
         <div className="card-header">
           <h2 id="support-h" className="row" style={{ '--gap': '8px' }}>

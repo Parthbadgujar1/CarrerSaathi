@@ -1,6 +1,6 @@
 # CareerSaathi — career readiness, mentorship & wellbeing platform
 
-CareerSaathi (a SkillNexGen initiative) helps every graduation student — B.Tech, B.Sc, B.Com, BBA, BA, M.Tech, MBA and more — close the
+CareerSaathi (a unique initiative by Sunsys Techsol) helps every graduation student — B.Tech, B.Sc, B.Com, BBA, BA, M.Tech, MBA and more — close the
 industry–academia gap with personalised roadmaps, an industry-readiness score, a career kit (resume, LinkedIn, GitHub/portfolio),
 opportunities, mentors, communities, live sessions and wellbeing tools. Admins monitor registrations and progress and export records
 to Excel; mentors track and guide their mentees.

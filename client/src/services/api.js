@@ -25,6 +25,7 @@ export const userApi = {
 
 export const studentApi = {
   dashboard: () => unwrap(http.get('/students/me/dashboard')),
+  progress: (period) => unwrap(http.get('/students/me/progress', { params: { period } })),
   careerKit: () => unwrap(http.get('/students/me/career-kit')),
   updateCareerKit: (items) => unwrap(http.put('/students/me/career-kit', { items })),
   resume: () => unwrap(http.get('/students/me/resume')),
@@ -40,7 +41,8 @@ export const roadmapApi = {
   unenroll: (id) => unwrap(http.delete(`/roadmaps/${id}/enroll`)),
   toggleStep: (id, key, done) => unwrap(http.patch(`/roadmaps/${id}/steps`, { key, done })),
   quiz: () => unwrap(http.get('/roadmaps/quiz')),
-  recommend: (answers) => unwrap(http.post('/roadmaps/recommend', { answers })),
+  generateQuiz: () => unwrap(http.post('/roadmaps/quiz/generate', {}, { timeout: 60_000 })),
+  recommend: (payload) => unwrap(http.post('/roadmaps/recommend', payload)),
   generate: (body) => unwrap(http.post('/roadmaps/generate', body, { timeout: 90_000 })),
   saveDraft: (draftKey) => unwrap(http.post('/roadmaps/save-draft', { draftKey })),
   adminList: () => unwrap(http.get('/roadmaps/admin/all')),
@@ -124,6 +126,7 @@ export const notificationApi = {
 
 export const adminApi = {
   stats: () => unwrap(http.get('/admin/stats')),
+  progress: (period) => unwrap(http.get('/admin/progress', { params: { period } })),
   students: (params) => unwrap(http.get('/admin/students', { params: clean(params) })),
   exportFields: () => unwrap(http.get('/admin/students/export-fields')),
   exportStudents: (body) => http.post('/admin/students/export', body, { responseType: 'blob', timeout: 120_000 }),

@@ -7,6 +7,7 @@ import { useAuth } from '../../store/auth.store';
 import { getErrorMessage, getFieldErrors } from '../../lib/http';
 import { Alert, Button, ChipsField, SelectField, TextAreaField, TextField } from '../ui';
 import { DEGREES, GRAD_YEARS } from '../../pages/auth/Register';
+import { AvatarUploader } from './AvatarUploader';
 
 const INDIAN_STATES = ['Andhra Pradesh', 'Arunachal Pradesh', 'Assam', 'Bihar', 'Chhattisgarh', 'Goa', 'Gujarat', 'Haryana', 'Himachal Pradesh', 'Jharkhand', 'Karnataka', 'Kerala', 'Madhya Pradesh', 'Maharashtra', 'Manipur', 'Meghalaya', 'Mizoram', 'Nagaland', 'Odisha', 'Punjab', 'Rajasthan', 'Sikkim', 'Tamil Nadu', 'Telangana', 'Tripura', 'Uttar Pradesh', 'Uttarakhand', 'West Bengal', 'Andaman and Nicobar Islands', 'Chandigarh', 'Dadra and Nagar Haveli and Daman and Diu', 'Delhi', 'Jammu and Kashmir', 'Ladakh', 'Lakshadweep', 'Puducherry'];
 
@@ -111,6 +112,7 @@ export function ProfileForm() {
       noValidate
     >
       {Object.keys(errors).length > 0 && <Alert type="error">Please fix the highlighted fields.</Alert>}
+      <AvatarUploader />
       <section className="card stack">
         <h2 style={{ fontSize: '1.05rem', margin: 0 }}>Basic details</h2>
         <div className="form-grid">

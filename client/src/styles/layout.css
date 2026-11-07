@@ -758,6 +758,60 @@
 .linklike:hover {
   text-decoration: underline;
 }
+.social-circles {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+.site-footer .social-circles a {
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  background: #fff;
+  color: var(--ink, #061727);
+  transition: transform 0.15s ease, background 0.15s ease;
+}
+.site-footer .social-circles a:hover {
+  transform: translateY(-2px);
+  background: var(--brand-glow);
+  color: #061727;
+}
+.footer-follow {
+  margin-top: 36px;
+  padding-top: 28px;
+  border-top: 1px solid rgba(255, 255, 255, 0.12);
+}
+.footer-built {
+  margin-top: 28px;
+  padding-top: 22px;
+  border-top: 1px solid rgba(255, 255, 255, 0.12);
+}
+.footer-built h4 {
+  font-size: 0.78rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: var(--brand-glow);
+  margin-bottom: 12px;
+}
+.footer-built ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 10px;
+}
+.footer-built li {
+  padding: 6px 14px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.1);
+  color: #fff;
+  font-weight: 600;
+  font-size: 0.85rem;
+}
 .footer-bottom {
   display: flex;
   flex-wrap: wrap;

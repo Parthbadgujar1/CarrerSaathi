@@ -162,7 +162,7 @@ function SettingsPanel() {
         <TextField label="Announcement banner (shown to all signed-in users)" maxLength={240} value={form.announcementBanner} onChange={(e) => set('announcementBanner', e.target.value)} hint="Leave empty to hide" />
       </section>
       <section className="card stack">
-        <h2 style={{ fontSize: '1.05rem', margin: 0 }}>Skill NexGen family links</h2>
+        <h2 style={{ fontSize: '1.05rem', margin: 0 }}>Sunsys Techsol family links</h2>
         <p className="small muted mb-0">Shown to students under Opportunities → Explore platforms.</p>
         <div className="form-grid">
           {Object.keys(form.ecosystemLinks).map((k) => (

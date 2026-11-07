@@ -6,8 +6,8 @@ import { escapeRegex, slugify } from '../../utils/helpers.js';
 import { objectId, text } from '../../utils/schemas.js';
 import { ROADMAP_CATEGORIES, ROLES } from '../../config/constants.js';
 import { refreshReadiness } from '../../services/readiness.service.js';
-import { generateRoadmap, loadDraft } from '../../services/ai/ai.service.js';
-import { scoreQuiz } from '../../services/ai/fallback.js';
+import { generateRoadmap, generateCareerQuiz, loadDraft } from '../../services/ai/ai.service.js';
+import { scoreQuiz, scoreSelections } from '../../services/ai/fallback.js';
 import { QUIZ } from '../../data/careerData.js';
 import { audit } from '../../services/audit.service.js';
 
@@ -130,10 +130,27 @@ export async function quiz(_req, res) {
   res.json({ success: true, data: QUIZ.map((q) => ({ id: q.id, question: q.question, options: q.options.map(({ id, label }) => ({ id, label })) })) });
 }
 
-export const recommendSchema = z.object({ answers: z.record(z.string().max(20), z.string().max(20)) });
+/** A fresh multi-select quiz (AI-generated in real time, with a standard fallback). */
+export async function generateQuiz(req, res) {
+  res.json({ success: true, data: await generateCareerQuiz(req.user) });
+}
+
+export const recommendSchema = z
+  .object({
+    answers: z.record(z.string().max(20), z.string().max(20)).optional(),
+    selections: z.array(z.object({ label: z.string().max(160), slugs: z.array(z.string().max(80)).min(1).max(6) })).max(40).optional(),
+  })
+  .refine((b) => b.answers || b.selections?.length, 'Pick at least one answer');
 
 export async function recommend(req, res) {
-  const ranked = scoreQuiz(req.body.answers, { degree: `${req.user.education?.degree || ''} ${req.user.education?.branch || ''}` });
+  const degree = `${req.user.education?.degree || ''} ${req.user.education?.branch || ''}`;
+  let ranked;
+  if (req.body.selections?.length) {
+    const library = await Roadmap.find({ isPublished: true, owner: null }).select('slug').lean();
+    ranked = scoreSelections(req.body.selections, { degree, validSlugs: new Set(library.map((r) => r.slug)) });
+  } else {
+    ranked = scoreQuiz(req.body.answers, { degree });
+  }
   const roadmaps = await Roadmap.find({ slug: { $in: ranked.map((r) => r.slug) }, isPublished: true }).select(LIST_FIELDS).lean();
   const bySlug = new Map(roadmaps.map((r) => [r.slug, withCounts(r)]));
   res.json({

@@ -17,7 +17,7 @@ import { providers, ProviderError } from './providers.js';
 import { getAiOrder, getProviderConfig } from './aiConfig.service.js';
 import { availableKeys, configuredProviders, reportFailure, reportSuccess, poolStatus } from './keyPool.js';
 import { matchLibrary, blendRoadmaps, ruleBasedAnswer, isCrisis } from './fallback.js';
-import { CRISIS_RESPONSE } from '../../data/careerData.js';
+import { CRISIS_RESPONSE, QUIZ } from '../../data/careerData.js';
 
 const MAX_ATTEMPTS = 4;
 
@@ -293,6 +293,24 @@ Opportunities (jobs, internships, competitions, tracker), Connect (mentors, comm
 Profile (resume builder, career kit). Do not invent salaries, company openings, statistics or links. You are not a doctor:
 for emotional distress be supportive and mention Tele-MANAS (14416). Reply in the language the student uses.`;
 
+/**
+ * Providers (Gemini especially) reject conversations that start with an assistant turn or have two
+ * turns from the same role in a row. The browser sends the last few messages, which can begin
+ * mid-conversation, so normalise them here: drop leading assistant turns, merge repeated roles.
+ */
+export function buildChatMessages(history, message) {
+  const out = [];
+  for (const turn of [...history, { role: 'user', content: message }]) {
+    const content = String(turn.content || '').trim();
+    if (!content) continue;
+    const last = out[out.length - 1];
+    if (!out.length && turn.role !== 'user') continue;
+    if (last && last.role === turn.role) last.content = `${last.content}\n${content}`;
+    else out.push({ role: turn.role, content });
+  }
+  return out;
+}
+
 export async function counsellorChat({ message, history = [] }, user) {
   const started = Date.now();
   if (isCrisis(message)) {
@@ -300,41 +318,128 @@ export async function counsellorChat({ message, history = [] }, user) {
     return { source: 'rules', reply: CRISIS_RESPONSE };
   }
 
-  const context = { degree: user.education?.degree || '', tracks: (user.careerTracks || []).slice(0, 3) };
-  const cacheable = history.length === 0;
-  const key = `chat:v1:${sha256(JSON.stringify({ m: message.trim().toLowerCase().replace(/\s+/g, ' '), ...context }))}`;
+  // Ask Saathi must never surface a server error to the student: any unexpected failure
+  // (database hiccup, provider outage, bad model output) degrades to the built-in guide.
+  try {
+    const context = { degree: user.education?.degree || '', tracks: (user.careerTracks || []).slice(0, 3) };
+    const cacheable = history.length === 0;
+    const key = `chat:v1:${sha256(JSON.stringify({ m: message.trim().toLowerCase().replace(/\s+/g, ' '), ...context }))}`;
 
-  if (cacheable) {
-    const cached = await cacheGet(key);
-    if (cached) {
-      logCall(user, 'chat', 'cache', { provider: cached.provider });
-      return { source: 'cache', provider: cached.provider, reply: cached.payload };
+    if (cacheable) {
+      const cached = await cacheGet(key);
+      if (cached) {
+        logCall(user, 'chat', 'cache', { provider: cached.provider });
+        return { source: 'cache', provider: cached.provider, reply: cached.payload };
+      }
     }
-  }
 
-  const quota = await quotaState(user);
-  if (quota.enabled && configuredProviders().length && quota.remaining > 0) {
-    try {
-      const { output, provider, latencyMs } = await runCompletion({
-        system: `${CHAT_SYSTEM}\nStudent context: ${JSON.stringify(context)}`,
-        messages: [...history.slice(-6), { role: 'user', content: message }],
-        maxTokens: 400,
-        temperature: 0.5,
-      });
-      if (cacheable) await cacheSet(key, 'chat', output, provider, 14);
-      logCall(user, 'chat', 'ai', { provider, latencyMs });
-      return { source: 'ai', provider, reply: output };
-    } catch (err) {
-      logCall(user, 'chat', 'rules', { success: false, error: err.message, latencyMs: Date.now() - started });
+    const quota = await quotaState(user);
+    if (quota.enabled && configuredProviders().length && quota.remaining > 0) {
+      try {
+        const { output, provider, latencyMs } = await runCompletion({
+          system: `${CHAT_SYSTEM}\nStudent context: ${JSON.stringify(context)}`,
+          messages: buildChatMessages(history.slice(-6), message),
+          maxTokens: 400,
+          temperature: 0.5,
+        });
+        if (cacheable) await cacheSet(key, 'chat', output, provider, 14);
+        logCall(user, 'chat', 'ai', { provider, latencyMs });
+        return { source: 'ai', provider, reply: output };
+      } catch (err) {
+        logger.warn('Ask Saathi AI call failed, using built-in guide', { message: err.message });
+        logCall(user, 'chat', 'rules', { success: false, error: err.message, latencyMs: Date.now() - started });
+      }
+    } else {
+      logCall(user, 'chat', 'rules');
     }
-  } else {
-    logCall(user, 'chat', 'rules');
+    return {
+      source: 'rules',
+      reply: ruleBasedAnswer(message),
+      notice: quota.remaining <= 0 && quota.enabled ? "You've reached today's AI limit — showing built-in guidance." : undefined,
+    };
+  } catch (err) {
+    logger.error('Ask Saathi failed unexpectedly', { message: err.message });
+    return { source: 'rules', reply: ruleBasedAnswer(message) };
   }
-  return {
-    source: 'rules',
-    reply: ruleBasedAnswer(message),
-    notice: quota.remaining <= 0 && quota.enabled ? "You've reached today's AI limit — showing built-in guidance." : undefined,
-  };
+}
+
+// ---------------------------------------------------------------- Career Compass quiz (AI, real time)
+const quizSchema = z.object({
+  questions: z
+    .array(
+      z.object({
+        question: z.string().trim().min(8).max(220),
+        options: z
+          .array(z.object({ label: z.string().trim().min(2).max(140), slugs: z.array(z.string()).min(1).max(4) }))
+          .min(4)
+          .max(6),
+      }),
+    )
+    .min(4)
+    .max(8),
+});
+
+const quizSystem = (slugs) => `You write a fresh "Career Compass" interest quiz for an Indian college student choosing a career path.
+Return ONLY JSON: {"questions":[{"question":string,"options":[{"label":string,"slugs":[string]}]}]}
+Rules: exactly 6 questions about interests, strengths, subjects, work style, values and goals; 5 options each; the student may pick
+SEVERAL options per question so options must not exclude each other; every option's "slugs" lists 1-3 roadmap slugs that the option suggests,
+chosen ONLY from this list: ${slugs.join(', ')}. Vary the wording and the scenarios every time. Keep labels under 15 words. No markdown.`;
+
+/** Rule-based multi-select version of the hard-coded quiz — used when AI is unavailable. */
+function staticQuiz() {
+  return QUIZ.map((q) => ({
+    id: q.id,
+    question: q.question,
+    options: q.options.map((o) => ({ id: `${q.id}-${o.id}`, label: o.label, slugs: Object.keys(o.weights) })),
+  }));
+}
+
+/**
+ * Generates a new quiz on every call (never cached, so every attempt gets fresh questions).
+ * Falls back to the curated question set when AI is off, over quota or fails.
+ */
+export async function generateCareerQuiz(user) {
+  const library = await Roadmap.find({ isPublished: true, owner: null }).select('slug').lean();
+  const valid = new Set(library.map((r) => r.slug));
+  const fallback = (notice) => ({ source: 'rules', notice, questions: staticQuiz() });
+
+  try {
+    const quota = await quotaState(user);
+    if (!quota.enabled || !configuredProviders().length) return fallback();
+    if (quota.remaining <= 0) return fallback(`You have used today's ${quota.limit} AI generations, so here is the standard quiz.`);
+    const { output, provider, latencyMs } = await runCompletion({
+      system: quizSystem([...valid]),
+      messages: [
+        {
+          role: 'user',
+          content: JSON.stringify({ degree: user.education?.degree || 'any', branch: user.education?.branch || '', seed: Math.random().toString(36).slice(2, 8) }),
+        },
+      ],
+      json: true,
+      maxTokens: 1800,
+      temperature: 0.9,
+      validate: (raw) => {
+        const parsed = quizSchema.safeParse(raw);
+        if (!parsed.success) throw new ProviderError('Quiz JSON did not match schema', { kind: 'bad_output' });
+        const questions = parsed.data.questions
+          .map((q, qi) => ({
+            id: `q${qi + 1}`,
+            question: q.question,
+            options: q.options
+              .map((o, oi) => ({ id: `q${qi + 1}-o${oi + 1}`, label: o.label, slugs: o.slugs.filter((sl) => valid.has(sl)) }))
+              .filter((o) => o.slugs.length),
+          }))
+          .filter((q) => q.options.length >= 3);
+        if (questions.length < 4) throw new ProviderError('Too few usable quiz questions', { kind: 'bad_output' });
+        return questions;
+      },
+    });
+    logCall(user, 'quiz', 'ai', { provider, latencyMs });
+    return { source: 'ai', provider, questions: output };
+  } catch (err) {
+    logger.warn('AI quiz generation failed, using standard quiz', { message: err.message });
+    return fallback('Our AI is busy right now, so here is the standard quiz.');
+  }
 }
 
 // ---------------------------------------------------------------- admin

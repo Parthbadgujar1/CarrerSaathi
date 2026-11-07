@@ -5,6 +5,11 @@ import { DEGREE_LEVELS } from '../../config/constants.js';
 export const updateProfileSchema = z.object({
   name: name.optional(),
   phone: phone.optional(),
+  avatar: z
+    .string()
+    .max(70000, 'Photo is too large')
+    .refine((v) => v === '' || /^data:image\/(jpeg|png|webp);base64,[A-Za-z0-9+/=]+$/.test(v), 'Photo must be a JPEG, PNG or WebP image')
+    .optional(),
   headline: text(140).optional(),
   bio: text(1000).optional(),
   education: z

@@ -7,8 +7,8 @@ const e = import.meta.env;
 
 export const SITE = Object.freeze({
   name: 'CareerSaathi',
-  tagline: 'Your companion from classroom to career',
-  company: e.VITE_BUSINESS_NAME || 'Skill NexGen',
+  tagline: 'Your companion from Day 1 to your career — a unique initiative by Sunsys Techsol',
+  company: e.VITE_BUSINESS_NAME || 'Sunsys Techsol',
   poweredBy: e.VITE_POWERED_BY || 'Sunsys Techsol Pvt. Ltd.',
   address: e.VITE_BUSINESS_ADDRESS || '',
   email: e.VITE_CONTACT_EMAIL || '',
@@ -19,12 +19,12 @@ export const SITE = Object.freeze({
   legalUpdated: '2026-10-01',
   helpline: { name: 'Tele-MANAS', number: '14416', alt: '1-800-891-4416' },
   social: [
-    { label: 'Skill NexGen on LinkedIn', url: 'https://www.linkedin.com/company/skillnexgen/' },
+    { label: 'Sunsys Techsol on LinkedIn', url: 'https://www.linkedin.com/company/sunsystechsol-pvt-ltd/' },
   ],
 });
 
 /**
- * The four Skill NexGen family portals — the only platforms CareerSaathi promotes —
+ * The four Sunsys Techsol family portals — the only platforms CareerSaathi promotes —
  * in the order a student's journey usually flows. Copy is drawn from each portal's own site.
  */
 export const ECOSYSTEM = [
@@ -100,3 +100,49 @@ export const PUBLIC_NAV = [
   { to: '/faq', label: 'FAQ' },
   { to: '/contact', label: 'Contact' },
 ];
+
+/** Official social pages of the Sunsys Techsol family (from the "Social Media update" circular). */
+export const SOCIAL_GROUPS = [
+  {
+    key: 'linkedin',
+    title: 'LinkedIn',
+    links: [
+      { label: 'Sunsys Techsol', url: 'https://www.linkedin.com/company/sunsystechsol-pvt-ltd/' },
+      { label: 'Skill NexGen', url: 'https://www.linkedin.com/company/skillnexgen/' },
+      { label: 'NaukriSaathi', url: 'https://www.linkedin.com/company/naukrisaathi/' },
+      { label: 'InternSaathi', url: 'https://www.linkedin.com/company/internsaathi/' },
+      { label: 'KaushalSaathi', url: 'https://www.linkedin.com/company/kaushalsaathi/' },
+      { label: 'TaskSaathi', url: 'https://www.linkedin.com/company/tasksaathi/' },
+      { label: 'ChaloSaathi', url: 'https://www.linkedin.com/company/chalosaathi/' },
+    ],
+  },
+  {
+    key: 'youtube',
+    title: 'YouTube',
+    links: [
+      { label: 'Sunsys Techsol', url: 'https://www.youtube.com/@sunsystechsol' },
+      { label: 'NaukriSaathi', url: 'https://www.youtube.com/@naukrisaathioffcial' },
+      { label: 'KaushalSaathi', url: 'https://www.youtube.com/@kaushalsaathi' },
+    ],
+  },
+  {
+    key: 'instagram',
+    title: 'Instagram',
+    links: [
+      { label: 'Sunsys Techsol', url: 'https://www.instagram.com/sunsys_techsol' },
+      { label: 'NaukriSaathi', url: 'https://www.instagram.com/naukri_saathi/' },
+      { label: 'InternSaathi', url: 'https://www.instagram.com/intern.saathi/' },
+      { label: 'KaushalSaathi', url: 'https://www.instagram.com/kaushalsaathi/' },
+    ],
+  },
+];
+
+/** HR team to connect with on LinkedIn. */
+export const HR_TEAM = [
+  { name: 'Ashwani Garg', role: 'CHRO, Sunsys Techsol', url: 'https://www.linkedin.com/in/ashwanigarg-chro' },
+  { name: 'Muskan Garg', role: 'HR team', url: 'https://www.linkedin.com/in/muskangarghr' },
+  { name: 'Vijay Luxmi', role: 'HR team', url: 'https://www.linkedin.com/in/vijay-luxmi' },
+];
+
+/** The student team that built CareerSaathi. */
+export const BUILT_BY = ['Parth Badgujar', 'Krushna Dodke', 'Tejas Bhagat', 'Payal Bhosale', 'Preeti Bhadoriya', 'Anshul Dahake'];

@@ -78,6 +78,8 @@ const userSchema = new Schema(
     status: { type: String, enum: Object.values(USER_STATUS), default: USER_STATUS.ACTIVE },
     emailVerified: { type: Boolean, default: false },
 
+    // Profile photo as a small (≈256px) JPEG/PNG/WebP data URL, resized in the browser before upload.
+    avatar: { type: String, maxlength: 70000, default: '' },
     headline: { type: String, trim: true, maxlength: 140, default: '' },
     bio: { type: String, trim: true, maxlength: 1000, default: '' },
     education: { type: educationSchema, default: () => ({}) },

@@ -6,6 +6,7 @@ import { PageTitle } from '../../components/common/PageTitle';
 import { Alert, Badge, Button, CardSkeleton, ErrorState, StatCard } from '../../components/ui';
 import { BarList, ChartCard, ColumnChart } from '../../components/charts/Charts';
 import { ErrorBoundary } from '../../components/common/ErrorBoundary';
+import { ProgressTracker } from '../../components/progress/ProgressTracker';
 
 const shortDay = (d) => new Date(`${d}T12:00:00`).toLocaleDateString('en-IN', { day: 'numeric', month: 'short' });
 
@@ -57,6 +58,9 @@ export function AdminOverview() {
           <Link to="/admin/mentors?status=pending">Review applications →</Link>
         </Alert>
       )}
+      <div className="mb-2">
+        <ErrorBoundary variant="section"><ProgressTracker scope="admin" /></ErrorBoundary>
+      </div>
       <div className="grid-4 mb-2">
         <StatCard icon={GraduationCap} label="Students" value={s.totals.students.toLocaleString('en-IN')} hint={`${s.totals.verified} verified email`} />
         <StatCard icon={UserPlus} label="New this week" value={s.totals.newThisWeek} tone="info" hint={`${total30} in the last 30 days`} />

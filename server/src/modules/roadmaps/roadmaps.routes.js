@@ -15,6 +15,7 @@ router.get('/quiz', c.quiz);
 
 // Authenticated
 router.get('/me/enrollments', authenticate, c.myEnrollments);
+router.post('/quiz/generate', authenticate, aiLimiter, c.generateQuiz);
 router.post('/recommend', authenticate, validate({ body: c.recommendSchema }), c.recommend);
 router.post('/generate', authenticate, aiLimiter, validate({ body: c.generateSchema }), c.generate);
 router.post('/save-draft', authenticate, authorize(ROLES.STUDENT), validate({ body: c.saveDraftSchema }), c.saveDraft);

@@ -58,7 +58,7 @@ const schema = z.object({
   RESEND_API_KEY: z.string().optional(),
   LOG_TO_FILE: bool(!process.env.RAILWAY_ENVIRONMENT_ID),
   MAIL_FROM: z.string().default('CareerSaathi <no-reply@localhost>'),
-  BUSINESS_NAME: z.string().default('SkillNexGen'),
+  BUSINESS_NAME: z.string().default('Sunsys Techsol'),
   BUSINESS_ADDRESS: z.string().default(''),
   SUPPORT_EMAIL: z.string().default(''),
 

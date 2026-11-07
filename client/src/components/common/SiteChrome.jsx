@@ -21,7 +21,7 @@ export function BrandMarkSvg() {
 
 export function Brand({ to = '/', sub }) {
   return (
-    <Link to={to} className="brand" aria-label="CareerSaathi home">
+    <Link to={to} className="brand" aria-label="CareerSaathi home page" title="Go to the CareerSaathi home page">
       <span className="brand-mark" aria-hidden="true">
         <BrandMarkSvg />
       </span>

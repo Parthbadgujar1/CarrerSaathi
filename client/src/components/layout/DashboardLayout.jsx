@@ -64,7 +64,7 @@ export function DashboardLayout() {
       {sidebarOpen && <div className="sidebar-backdrop" onClick={() => setSidebar(false)} aria-hidden="true" />}
       <aside className={`sidebar ${sidebarOpen ? 'open' : ''}`} aria-label="Sidebar">
         <div className="sidebar-head">
-          <Brand to={nav[0].to} sub={`${ROLE_LABEL[user.role]} workspace`} />
+          <Brand to="/" sub={`${ROLE_LABEL[user.role]} workspace`} />
         </div>
         <nav aria-label="Dashboard">
           {nav.map((item) => (
@@ -81,7 +81,7 @@ export function DashboardLayout() {
         </nav>
         <div className="sidebar-foot">
           <div className="ecosystem-card">
-            Part of the <strong>Skill NexGen</strong> family:{' '}
+            Part of the <strong>Sunsys Techsol</strong> family:{' '}
             {ECOSYSTEM.map((p, i) => (
               <span key={p.key}>
                 <a href={p.url} target="_blank" rel="noopener noreferrer">
@@ -119,7 +119,7 @@ export function DashboardLayout() {
               width={240}
               trigger={(props) => (
                 <button type="button" className="icon-btn" aria-label="Account menu" style={{ width: 'auto', padding: '0 4px' }} {...props}>
-                  <Avatar name={user.name} size={32} />
+                  <Avatar name={user.name} src={user.avatar} size={32} />
                 </button>
               )}
             >

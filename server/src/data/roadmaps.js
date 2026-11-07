@@ -749,4 +749,122 @@ export const ROADMAPS = [
       ]),
     ],
   },
+  {
+    slug: 'sales-business-development',
+    title: 'Sales & Business Development',
+    category: 'Management',
+    icon: 'TrendingUp',
+    duration: '4–6 months',
+    summary: 'Learn consultative selling, lead generation, CRM tools and negotiation to start as a sales or business development associate.',
+    suitableFor: ['BBA', 'B.Com', 'MBA', 'BA', 'Any graduate'],
+    roles: ['Business Development Associate', 'Sales Executive', 'Inside Sales Representative', 'Account Executive'],
+    skills: ['Prospecting', 'Cold outreach', 'Negotiation', 'CRM', 'Product knowledge', 'Presentation', 'Communication'],
+    keywords: ['sales', 'business development', 'bda', 'crm', 'inside sales', 'account executive', 'marketing sales'],
+    careerKit: [{ key: 'pitch', label: 'A 2-minute sales pitch recorded and reviewed by a mentor' }],
+    phases: [
+      P('Sales foundations', '4 weeks', [
+        S('sales-basics', 'How B2B and B2C sales work', 'Sales funnel, buyer personas, value propositions and common sales roles.', [
+          R('HubSpot Academy — Inbound Sales', 'https://academy.hubspot.com/courses/inbound-sales'),
+        ]),
+        common.communication,
+      ]),
+      P('Skills & tools', '8 weeks', [
+        S('prospecting', 'Prospecting & outreach', 'Build a lead list, write cold emails and LinkedIn messages, handle objections.', []),
+        S('crm', 'CRM basics', 'Track leads, deals and follow-ups in a CRM.', [R('HubSpot CRM training', 'https://academy.hubspot.com/', 'course')]),
+        S('proj-sales', 'Project: mock sales campaign', 'Pick a product, define the buyer, write outreach scripts and a pitch deck, and present it.', [], true),
+      ]),
+      P('Get hired', '4 weeks', [
+        S('sales-interview', 'Interview and role-play practice', 'Practise cold-call and discovery-call role plays with a mentor.', []),
+      ]),
+    ],
+  },
+  {
+    slug: 'entrepreneurship-startups',
+    title: 'Entrepreneurship & Startups',
+    category: 'Management',
+    icon: 'Rocket',
+    duration: '6 months',
+    summary: 'Validate an idea, build a minimum viable product, find first customers and understand funding, legal and finance basics.',
+    suitableFor: ['Any graduate'],
+    roles: ['Founder', 'Startup Operations Associate', 'Product Associate', 'Growth Associate'],
+    skills: ['Problem validation', 'Customer interviews', 'MVP', 'Pitching', 'Unit economics', 'Marketing basics', 'Team building'],
+    keywords: ['startup', 'entrepreneur', 'founder', 'business idea', 'mvp', 'venture', 'own business'],
+    careerKit: [{ key: 'pitchDeck', label: 'A 10-slide pitch deck for your idea' }],
+    phases: [
+      P('Idea & validation', '6 weeks', [
+        S('startup-school', 'Learn the startup basics', 'Idea validation, talking to customers, and finding a real problem worth solving.', [
+          R('Startup School', 'https://www.startupschool.org/', 'course'),
+        ]),
+        S('customer-interviews', 'Run 10 customer interviews', 'Write interview questions, talk to 10 target users and summarise the patterns.', [], true),
+      ]),
+      P('Build & launch', '10 weeks', [
+        S('mvp', 'Build a minimum viable product', 'Use no-code tools or a simple prototype to test the idea with real users.', []),
+        S('first-customers', 'Get your first customers', 'Pick one channel, run a small experiment, and measure results.', []),
+        S('money-basics', 'Money, legal & funding basics', 'Pricing, unit economics, company registration options and startup schemes in India.', [
+          R('Startup India (Govt. of India)', 'https://www.startupindia.gov.in/', 'doc'),
+        ]),
+      ]),
+      P('Pitch & grow', '4 weeks', [
+        S('pitch', 'Pitch your startup', 'Present your pitch deck to mentors and incubators; collect feedback and iterate.', [], true),
+      ]),
+    ],
+  },
+  {
+    slug: 'video-editing-creative-media',
+    title: 'Video Editing & Creative Media',
+    category: 'Creative & Media',
+    icon: 'Film',
+    duration: '4–6 months',
+    summary: 'Learn video editing, motion graphics basics, storytelling and a portfolio for media, social and agency roles.',
+    suitableFor: ['BA', 'B.Des', 'B.Sc', 'BCA', 'Any graduate'],
+    roles: ['Video Editor', 'Social Media Creator', 'Motion Graphics Designer', 'Content Producer'],
+    skills: ['Video editing', 'Storytelling', 'Colour correction', 'Audio editing', 'Motion graphics', 'Thumbnail design', 'Portfolio'],
+    keywords: ['video', 'video editing', 'editor', 'youtube', 'reels', 'animation', 'media', 'creative', 'film'],
+    careerKit: [{ key: 'reel', label: 'A 60-second showreel or portfolio page' }],
+    phases: [
+      P('Editing basics', '6 weeks', [
+        S('editing-tool', 'Learn a free editor', 'Cuts, transitions, audio, titles and exports in a free editor such as DaVinci Resolve.', [
+          R('DaVinci Resolve training (official)', 'https://www.blackmagicdesign.com/products/davinciresolve/training', 'course'),
+        ]),
+        S('storytelling', 'Storytelling & pacing', 'Learn how hooks, structure and rhythm hold viewers’ attention.', [R('YouTube Creator Academy', 'https://www.youtube.com/creators/', 'course')]),
+      ]),
+      P('Portfolio', '8 weeks', [
+        S('proj-edit', 'Project: three edited videos', 'Edit a short documentary, an event reel and a social ad; share them for feedback.', [], true),
+        S('design-assets', 'Thumbnails & graphics', 'Create thumbnails and simple graphics.', [R('Canva Design School', 'https://www.canva.com/designschool/', 'course')]),
+      ]),
+      P('Get clients or a job', '4 weeks', [
+        S('freelance', 'Pitch agencies and creators', 'Publish your showreel, apply to agencies and offer a free trial edit to small creators.', []),
+      ]),
+    ],
+  },
+  {
+    slug: 'teaching-academia',
+    title: 'Teaching, Research & Academia',
+    category: 'Public Sector',
+    icon: 'GraduationCap',
+    duration: '6–12 months',
+    summary: 'Prepare for teaching eligibility exams, higher studies and research careers, and learn how to teach and communicate clearly.',
+    suitableFor: ['B.Ed', 'B.Sc', 'BA', 'M.Sc', 'MA', 'Any graduate'],
+    roles: ['School Teacher', 'Lecturer / Assistant Professor', 'Researcher', 'Instructional Designer', 'EdTech Educator'],
+    skills: ['Subject expertise', 'Lesson planning', 'Communication', 'Research methods', 'Academic writing', 'Exam preparation'],
+    keywords: ['teacher', 'teaching', 'professor', 'lecturer', 'net', 'ctet', 'b.ed', 'research', 'phd', 'academia', 'education'],
+    careerKit: [{ key: 'demoLesson', label: 'A recorded 10-minute demo lesson' }],
+    phases: [
+      P('Choose your path', '2 weeks', [
+        S('teach-path', 'School teaching, college teaching or research?', 'Read the eligibility rules for CTET/TET, UGC NET and research programmes.', [
+          R('CTET (official)', 'https://ctet.nic.in/', 'doc'),
+          R('UGC NET (NTA)', 'https://ugcnet.nta.ac.in/', 'doc'),
+        ]),
+      ]),
+      P('Prepare', '20 weeks', [
+        S('subject', 'Strengthen your subject', 'Follow a structured syllabus and take weekly topic tests.', [NPTEL, SWAYAM]),
+        S('pedagogy', 'Pedagogy and lesson planning', 'Learn how to plan lessons, assess learning and handle a classroom.', []),
+        S('research-writing', 'Research & academic writing basics', 'Read papers, write a short literature review and learn how to cite.', []),
+      ]),
+      P('Practice & apply', 'Ongoing', [
+        S('demo', 'Record a demo lesson', 'Teach a 10-minute topic to peers or a camera, then improve using feedback.', [], true),
+        S('mocks-teach', 'Mock tests & interviews', 'Take weekly mocks and practise teaching interviews.', []),
+      ]),
+    ],
+  },
 ];

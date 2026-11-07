@@ -90,10 +90,10 @@ export function Badge({ tone, children, icon: Icon }) {
   );
 }
 
-export function Avatar({ name = '', size = 36 }) {
+export function Avatar({ name = '', size = 36, src = '' }) {
   return (
-    <span className="avatar" style={{ '--size': `${size}px`, background: colorFor(name) }} aria-hidden="true">
-      {initials(name)}
+    <span className="avatar" style={{ '--size': `${size}px`, background: src ? 'var(--surface-3)' : colorFor(name), overflow: 'hidden' }} aria-hidden="true">
+      {src ? <img src={src} alt="" width={size} height={size} style={{ width: '100%', height: '100%', objectFit: 'cover' }} /> : initials(name)}
     </span>
   );
 }

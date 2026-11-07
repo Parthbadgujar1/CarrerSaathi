@@ -6,11 +6,17 @@ import { idParam } from '../../utils/schemas.js';
 import { ROLES } from '../../config/constants.js';
 import * as c from './admin.controller.js';
 import * as v from './admin.validation.js';
+import { platformProgress, PERIODS } from '../../services/progress.service.js';
+
+const progressQuery = z.object({ period: z.enum(Object.keys(PERIODS)).default('week') });
 
 const router = Router();
 router.use(authenticate, authorize(ROLES.ADMIN));
 
 router.get('/stats', c.stats);
+router.get('/progress', validate({ query: progressQuery }), async (req, res) => {
+  res.json({ success: true, data: await platformProgress(req.query.period) });
+});
 
 router.get('/students', validate({ query: v.studentsQuery }), c.listStudents);
 router.get('/students/export-fields', c.exportFields);

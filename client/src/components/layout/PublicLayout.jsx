@@ -50,7 +50,7 @@ export function PublicLayout() {
       </div>
       <header ref={headerRef} className={`site-header ${y > 8 ? 'scrolled' : ''}`}>
         <div className="container">
-          <Brand sub="by Skill NexGen" />
+          <Brand sub={`by ${SITE.company}`} />
           <nav className="nav-links" aria-label="Main">
             {PUBLIC_NAV.map((n) => (
               <NavLink key={n.to} to={n.to} className={({ isActive }) => (isActive && !n.to.includes('#') ? 'active' : '')}>

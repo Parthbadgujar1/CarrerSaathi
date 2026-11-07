@@ -154,7 +154,7 @@ export function Terms() {
 
       <h2>5. Third-party opportunities and links</h2>
       <p>
-        Opportunities may link to external sites (for example the Skill NexGen family portals — Skill NexGen, KaushalSaathi, InternSaathi and NaukriSaathi — or job sites such as Unstop and Indeed). Those sites have their
+        Opportunities may link to external sites (for example the Sunsys Techsol family portals — Skill NexGen, KaushalSaathi, InternSaathi and NaukriSaathi — or job sites such as Unstop and Indeed). Those sites have their
         own terms. Never pay any fee to apply for a job or internship, and report suspicious listings to us.
       </p>
 

@@ -94,6 +94,26 @@ export function ruleBasedAnswer(message) {
   return 'Here is a reliable way to move forward: (1) pick or confirm your career track on the Roadmap page (take the Career Compass quiz if unsure), (2) complete a few roadmap steps each week, (3) tick off your Career Kit — resume, LinkedIn, projects, (4) apply to opportunities and track them, and (5) connect with a mentor for personal guidance. Ask me about resumes, LinkedIn, interviews, internships, placements or higher studies for specific tips.';
 }
 
+const DEGREE_BOOSTS = [
+  [/b\.?com|commerce|ca\b/, ['finance-accounting', 'data-analytics']],
+  [/bba|bms|mba|management/, ['business-analysis-consulting', 'digital-marketing', 'human-resources', 'product-management']],
+  [/mech|automobile|production/, ['mechanical-engineering-design']],
+  [/civil|arch/, ['civil-engineering']],
+  [/ece|eee|electr/, ['electronics-embedded-vlsi']],
+  [/cse|it\b|bca|mca|computer|software/, ['full-stack-web-development', 'data-science-ai', 'cloud-devops']],
+  [/des|fine art|bfa/, ['ui-ux-design']],
+  [/ba\b|arts|english|journalism|mass/, ['content-technical-writing', 'government-public-sector']],
+];
+
+function rank(totals, reasons, degree) {
+  const d = String(degree || '').toLowerCase();
+  if (d) for (const [re, slugs] of DEGREE_BOOSTS) if (re.test(d)) for (const sl of slugs) totals[sl] = (totals[sl] || 0) + 1;
+  return Object.entries(totals)
+    .sort((a, b) => b[1] - a[1])
+    .slice(0, 3)
+    .map(([slug, score]) => ({ slug, score, reasons: [...new Set(reasons[slug] || [])].slice(0, 3) }));
+}
+
 /** Career Compass: answers = { [questionId]: optionId }. Returns ranked slugs with reasons. */
 export function scoreQuiz(answers, { degree = '' } = {}) {
   const totals = {};
@@ -106,22 +126,23 @@ export function scoreQuiz(answers, { degree = '' } = {}) {
       (reasons[slug] ||= []).push(opt.label);
     }
   }
-  const d = degree.toLowerCase();
-  if (d) {
-    const boosts = [
-      [/b\.?com|commerce|ca\b/, ['finance-accounting', 'data-analytics']],
-      [/bba|bms|mba|management/, ['business-analysis-consulting', 'digital-marketing', 'human-resources', 'product-management']],
-      [/mech|automobile|production/, ['mechanical-engineering-design']],
-      [/civil|arch/, ['civil-engineering']],
-      [/ece|eee|electr/, ['electronics-embedded-vlsi']],
-      [/cse|it\b|bca|mca|computer|software/, ['full-stack-web-development', 'data-science-ai', 'cloud-devops']],
-      [/des|fine art|bfa/, ['ui-ux-design']],
-      [/ba\b|arts|english|journalism|mass/, ['content-technical-writing', 'government-public-sector']],
-    ];
-    for (const [re, slugs] of boosts) if (re.test(d)) for (const s of slugs) totals[s] = (totals[s] || 0) + 1;
+  return rank(totals, reasons, degree);
+}
+
+/**
+ * Multi-select Career Compass (AI-generated or standard questions):
+ * selections = [{ label, slugs[] }] — every picked option votes for its roadmaps.
+ * Slugs are checked against the published library so a tampered request cannot invent roadmaps.
+ */
+export function scoreSelections(selections, { degree = '', validSlugs } = {}) {
+  const totals = {};
+  const reasons = {};
+  for (const sel of selections || []) {
+    for (const slug of sel.slugs || []) {
+      if (validSlugs && !validSlugs.has(slug)) continue;
+      totals[slug] = (totals[slug] || 0) + 2;
+      (reasons[slug] ||= []).push(sel.label);
+    }
   }
-  return Object.entries(totals)
-    .sort((a, b) => b[1] - a[1])
-    .slice(0, 3)
-    .map(([slug, score]) => ({ slug, score, reasons: [...new Set(reasons[slug] || [])].slice(0, 3) }));
+  return rank(totals, reasons, degree);
 }

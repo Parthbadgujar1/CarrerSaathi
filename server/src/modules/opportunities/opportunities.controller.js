@@ -184,7 +184,7 @@ export async function external(req, res) {
   const descriptions = {
     skillnexgen: 'Industry-focused courses with projects, certificates and mentors',
     kaushalsaathi: 'Live, mentor-led job-ready training with real projects',
-    internsaathi: 'Internships across the Skill NexGen network',
+    internsaathi: 'Internships across the Sunsys Techsol network',
     naukrisaathi: 'Jobs for freshers and graduates with verified companies',
   };
   res.json({
